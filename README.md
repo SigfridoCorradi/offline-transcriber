@@ -21,3 +21,6 @@ Create a Python environment (for example: `python3 -m venv myenv`), install the 
 
 `* Running on local URL:  http://127.0.0.1:49591`
 
+<img width="100%" alt="example" style="width:100%" src="https://github.com/user-attachments/assets/60bcbff3-c89f-4d75-be14-4cc651c0b80e" />
+
+
