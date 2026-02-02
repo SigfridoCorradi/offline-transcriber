@@ -23,4 +23,9 @@ Create a Python environment (for example: `python3 -m venv myenv`), install the 
 
 <img width="100%" alt="example" style="width:100%" src="https://github.com/user-attachments/assets/60bcbff3-c89f-4d75-be14-4cc651c0b80e" />
 
+# Modification / customization
+
+At the beginning of the program, all the variables are present to customize the program, add languages, or modify prompts for Ollama.
+
+<img width="100%" alt="customization" style="width:100%" src="https://github.com/user-attachments/assets/5cc1d366-3177-4532-8ff0-39c9a76a8518" />
 
