@@ -17,7 +17,7 @@ This is a Gradio web app with the following features:
 
 # Usage
 
-Create a Python environment (for example: `python3 -m venv myenv`), install the requirements (`pip install -r requirements.txt`), and simply run the program. You can then use the application by going to the address shown in the terminal with a browser, for example:
+Create a Python environment (`python3 -m venv myenv`), install the requirements (`pip install -r requirements.txt`), and simply run the program. You can then use the application by going to the address shown in the terminal with a browser, for example:
 
 `* Running on local URL:  http://127.0.0.1:49591`
 
