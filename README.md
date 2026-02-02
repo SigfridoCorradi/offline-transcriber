@@ -3,7 +3,7 @@ Offline transcriber based on open-weight models: transcribes, summarizes, create
 # Description
 If you are interested in a completely *private* solution for transcribing audio recordings, creating summaries and outlines of what has been transcribed, and being able to work even when you are not connected to the internet, this simple program is the answer!
 
-Simply download the OpenAI `Whisper large v3` model from Huggin Face to the `whisper-large-v3` directory, then install `Ollama` on your computer and use the `ollama pull ...` command to request the download of an open-weight model of your choice, for example `qwen3:30b-a3b-instruct-2507-q4_K_M` which can also operate with a low amount of available VRAM.
+Simply download the OpenAI [Whisper large v3](https://huggingface.co/openai/whisper-large-v3) model from Huggin Face to the `whisper-large-v3` directory, then install `Ollama` on your computer and use the `ollama pull ...` command to request the download of an open-weight model of your choice, for example `qwen3:30b-a3b-instruct-2507-q4_K_M` which can also operate with a low amount of available VRAM.
 
 # Details
 This is a Gradio web app with the following features:
