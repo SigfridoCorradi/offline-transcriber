@@ -23,6 +23,13 @@ Create a Python environment (`python3 -m venv myenv`), install the requirements 
 
 <img width="100%" alt="example" style="width:100%" src="https://github.com/user-attachments/assets/60bcbff3-c89f-4d75-be14-4cc651c0b80e" />
 
+# Direct audio recording
+
+You can record an audio track directly without having to upload a previously prepared file:
+
+<img width="100%" alt="customization" style="width:100%" src="https://github.com/user-attachments/assets/ef70e181-5386-466f-b801-e4f7b344effc" />
+
+
 # Modification / customization
 
 At the beginning of the program, all the variables are present to customize the program, add languages, or modify prompts for Ollama.
