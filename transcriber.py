@@ -77,6 +77,10 @@ TEXTS = {
             "bullets_placeholder": "Lista puntata non disponibile.",
             "default_audio_name": "audio",
             "language_label": "Lingua interfaccia",
+            "label_record": "Registra audio (microfono):",
+            "button_add_recording": "Aggiungi registrazione alla coda",
+            "record_added": "Registrazione aggiunta alla coda: {name}",
+            "record_missing": "Nessuna registrazione da aggiungere.",
         },
     },
     "en": {
@@ -128,6 +132,10 @@ TEXTS = {
             "bullets_placeholder": "Bullet list not available.",
             "default_audio_name": "audio",
             "language_label": "Interface language",
+            "label_record": "Record audio (microphone):",
+            "button_add_recording": "Add recording to queue",
+            "record_added": "Recording added to the queue: {name}",
+            "record_missing": "No recording to add.",
         },
     },
 }
@@ -360,6 +368,45 @@ def _render_results(
         )
     return "<div class='results-grid'>" + "".join(cards) + "</div>"
 
+def _extract_recording_path(recording) -> str | None:
+    if recording is None:
+        return None
+    if isinstance(recording, str):
+        return recording
+    if isinstance(recording, dict):
+        for key in ("path", "name", "file"):
+            value = recording.get(key)
+            if value:
+                return value
+    return None
+
+def _normalize_files(files: list[str] | None) -> list[str]:
+    if not files:
+        return []
+    normalized = []
+    for entry in files:
+        if isinstance(entry, str):
+            normalized.append(entry)
+        elif isinstance(entry, dict):
+            path = entry.get("path") or entry.get("name") or entry.get("file")
+            if path:
+                normalized.append(path)
+    return normalized
+
+def add_recording_to_queue(
+    recording,
+    files: list[str] | None,
+    lang: str,
+) -> tuple[list[str], str, None]:
+    ui = _get_text(lang)["ui"]
+    recording_path = _extract_recording_path(recording)
+    if not recording_path:
+        return _normalize_files(files), ui["record_missing"], None
+    updated_files = _normalize_files(files)
+    updated_files.append(recording_path)
+    display_name = os.path.basename(recording_path)
+    return updated_files, ui["record_added"].format(name=display_name), None
+
 def transcribe_many(
     files: list[str] | None,
     summarize: bool,
@@ -434,6 +481,7 @@ CSS = """
   --upload-muted: #5c6470;
   --shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
   --font-body: "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", "Arial", sans-serif;
+  --button-secondary-background-fill: #3b82f6;
 }
 
 .filename {
@@ -746,6 +794,14 @@ body, .gradio-container {
   right: 0px;
 }
 
+.mic-select {
+  color: black;
+}
+
+.pause-button {
+  background-color:white;
+}
+
 footer {
     display: none;
 }
@@ -844,6 +900,9 @@ def _apply_language(
         value=_render_results(results or [], summarize, bullet_list, lang),
     )
     lang_update = gr.update(label=ui["language_label"], value=lang)
+    record_update = gr.update(label=ui["label_record"])
+    add_record_update = gr.update(value=ui["button_add_recording"])
+    record_status_update = gr.update(value="")
     return (
         header_value,
         alert_update,
@@ -853,6 +912,9 @@ def _apply_language(
         button_update,
         output_update,
         lang_update,
+        record_update,
+        add_record_update,
+        record_status_update,
     )
 
 with gr.Blocks() as demo:
@@ -879,6 +941,13 @@ with gr.Blocks() as demo:
                 file_types=["audio"],
                 type="filepath",
             )
+            record_input = gr.Audio(
+                label=ui_default["label_record"],
+                sources=["microphone"],
+                type="filepath",
+            )
+            add_record_btn = gr.Button(ui_default["button_add_recording"], variant="primary")
+            record_status = gr.Markdown(value="")
             summary_input = gr.Checkbox(
                 value=False,
                 label=ui_default["label_summary"],
@@ -895,6 +964,11 @@ with gr.Blocks() as demo:
         inputs=[file_input, summary_input, bullets_input, lang_select],
         outputs=[output_html, results_state],
     )
+    add_record_btn.click(
+        fn=add_recording_to_queue,
+        inputs=[record_input, file_input, lang_select],
+        outputs=[file_input, record_status, record_input],
+    )
     lang_select.change(
         fn=_apply_language,
         inputs=[lang_select, file_input, summary_input, bullets_input, results_state],
@@ -907,6 +981,9 @@ with gr.Blocks() as demo:
             transcribe_btn,
             output_html,
             lang_select,
+            record_input,
+            add_record_btn,
+            record_status,
         ],
     )
 
